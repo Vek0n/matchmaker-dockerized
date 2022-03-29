@@ -13,6 +13,8 @@ import com.skaczmarek.matchmakerappbackend.repository.RoomRepository;
 import com.skaczmarek.matchmakerappbackend.repository.UserRepository;
 import com.skaczmarek.matchmakerappbackend.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,7 +41,7 @@ public class RoomService {
 
 
     public Room createRoom(CreateRoomDTO createRoomDTO) throws UserNotFoundException, GameNotFoundException {
-        long userId = createRoomDTO.getUserId();
+        long userId = getUserIdFromToken();
         long gameId = createRoomDTO.getGameId();
         int maxPlayers = createRoomDTO.getMaxPlayers();
         PlayerDTO playerDTO = createRoomDTO.getPlayer();
@@ -73,20 +75,21 @@ public class RoomService {
 
 
 
-    public List<Room>getAllRoomsWithUserWithStatus(long userId, RoomStatus status){
+    public List<Room>getAllRoomsWithUserWithStatus(RoomStatus status){
+        long userId = getUserIdFromToken();
         List<Room> allRooms = roomRepository.findAll();
-
         return findRoomsWithUser(allRooms, userId)
                 .stream()
-                .filter(r -> r.getRoomStatus().equals(status))
+                .filter(c -> c.getRoomStatus().equals(status))
                 .collect(Collectors.toList());
+
     }
 
 
-    public List<Room>getNewestRoomWithUser(long userId){
+    public List<Room>getNewestRoomWithUser(){
+        long userId = getUserIdFromToken();
         List<Room> allRooms = roomRepository.findAll();
         List<Room> roomsWithPlayer = findRoomsWithUser(allRooms, userId);
-
         Room newestRoom;
         if (roomsWithPlayer.size() <= 1) return roomsWithPlayer;
         else{
@@ -102,6 +105,7 @@ public class RoomService {
 
 
     private List<Room> findRoomsWithUser(List<Room> listOfRooms, long userId){
+        userId = getUserIdFromToken();
         boolean foundUser = false;
         List<Room> roomsWithPlayer = new LinkedList<>();
         for (Room r : listOfRooms) {
@@ -119,9 +123,11 @@ public class RoomService {
     }
 
 
-    public List<Room> getAllRoomsWithoutUser(long userId) {
+    public List<Room> getAllRoomsWithoutUser() {
+        long userId = getUserIdFromToken();
         List<Room> allRooms = roomRepository.findAll();
         List<Room> roomsWithoutUser = new LinkedList<>();
+
         boolean foundUser = false;
         boolean isRoomOpen = false;
         for (Room r : allRooms){
@@ -139,12 +145,14 @@ public class RoomService {
             foundUser = false;
             isRoomOpen = false;
         }
+
         return roomsWithoutUser;
     }
 
 
 
-    public Room addPlayerToTheRoomUsingUserId(long roomId, long userId, PlayerDTO playerDTO) throws RoomNotFoundException, UserNotFoundException, RoomIsFullException, RoomIsClosedException {
+    public Room addPlayerToTheRoomUsingUserId(long roomId, PlayerDTO playerDTO) throws RoomNotFoundException, UserNotFoundException, RoomIsFullException, RoomIsClosedException {
+        long userId = getUserIdFromToken();
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException(roomId));
@@ -183,7 +191,8 @@ public class RoomService {
 
 
 
-    public Room removeUserFromRoom(long roomId, long userId) throws RoomNotFoundException, PlayerNotFoundException {
+    public Room removeUserFromRoom(long roomId) throws RoomNotFoundException, PlayerNotFoundException {
+        long userId = getUserIdFromToken();
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException(roomId));
@@ -209,5 +218,13 @@ public class RoomService {
                 .stream()
                 .filter(r -> r.getRoomStatus().equals(roomStatus))
                 .collect(Collectors.toList());
+    }
+
+    private long getUserIdFromToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository
+               .findByUsername(username)
+               .getUserId();
     }
 }

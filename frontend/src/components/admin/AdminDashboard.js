@@ -19,8 +19,7 @@ export default class AdminDashboard extends Component {
 
     getUserRole() {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/users/role/' + userId, {
+        axios.get('http://localhost:8080/users/role', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

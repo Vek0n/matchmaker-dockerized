@@ -39,10 +39,7 @@ class Room extends React.Component {
     }   
 
     handleJoin(roomId){
-        // console.log(roomId)
         const token = getToken()
-        const userId = getUserId()
-        // const history = useHistory();
         if(this.state.isPlayerCreated){ 
             axios.post('http://localhost:8080/room/' + roomId ,{
                 gameRank: this.state.choosenRank,
@@ -51,9 +48,6 @@ class Room extends React.Component {
                 {
                 headers: {
                     'Authorization': 'Bearer ' + token
-                },
-                params: {
-                    userId: userId
                 },
             })
             .then(res => {

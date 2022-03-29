@@ -49,29 +49,29 @@ public class RoomController {
         return roomService.getAllRoomsWithStatus(RoomStatus.CLOSED);
     }
 
-    @GetMapping(value = "/room/without/{userId}")
-    public List<Room> getAllRoomsWithoutUser(@PathVariable long userId){
-        return roomService.getAllRoomsWithoutUser(userId);
+    @GetMapping(value = "/room/without")
+    public List<Room> getAllRoomsWithoutUser(){
+        return roomService.getAllRoomsWithoutUser();
     }
 
-    @GetMapping(value = "/room/open/{userId}")
-    public List<Room> getAllOpenRoomsWithUser(@PathVariable long userId){
-        return roomService.getAllRoomsWithUserWithStatus(userId, RoomStatus.OPEN);
+    @GetMapping(value = "/room/open/current")
+    public List<Room> getAllOpenRoomsWithUser(){
+        return roomService.getAllRoomsWithUserWithStatus(RoomStatus.OPEN);
     }
 
-    @GetMapping(value = "/room/closed/{userId}")
-    public List<Room> getAllClosedRoomsWithUser(@PathVariable long userId){
-        return roomService.getAllRoomsWithUserWithStatus(userId, RoomStatus.CLOSED);
+    @GetMapping(value = "/room/closed/current")
+    public List<Room> getAllClosedRoomsWithUser(){
+        return roomService.getAllRoomsWithUserWithStatus(RoomStatus.CLOSED);
     }
 
-    @GetMapping(value = "/room/newest/{userId}")
-    public List<Room> getNewestRoomWithUser(@PathVariable long userId){
-        return roomService.getNewestRoomWithUser(userId);
+    @GetMapping(value = "/room/newest")
+    public List<Room> getNewestRoomWithUser(){
+        return roomService.getNewestRoomWithUser();
     }
 
     @PostMapping(value = "/room/{roomId}")
-    public Room addPlayerToRoomUsingUserId(@PathVariable long roomId, @RequestParam long userId, @RequestBody PlayerDTO playerDTO) throws RoomNotFoundException, UserNotFoundException, RoomIsFullException, RoomIsClosedException {
-        return roomService.addPlayerToTheRoomUsingUserId(roomId, userId, playerDTO);
+    public Room addPlayerToRoomUsingUserId(@PathVariable long roomId, @RequestBody PlayerDTO playerDTO) throws RoomNotFoundException, UserNotFoundException, RoomIsFullException, RoomIsClosedException {
+        return roomService.addPlayerToTheRoomUsingUserId(roomId, playerDTO);
     }
 
     @DeleteMapping(value = "/room/{roomId}")
@@ -79,8 +79,10 @@ public class RoomController {
         return roomService.deleteRoom(roomId);
     }
 
-    @GetMapping(value = "/room/{roomId}/{userId}")
-    public Room removeUserFromRoom (@PathVariable long roomId, @PathVariable long userId) throws PlayerNotFoundException, RoomNotFoundException {
-        return roomService.removeUserFromRoom(roomId, userId);
+    @GetMapping(value = "/room/{roomId}/removeCurrentUser")
+    public Room removeUserFromRoom (@PathVariable long roomId) throws PlayerNotFoundException, RoomNotFoundException {
+        return roomService.removeUserFromRoom(roomId);
     }
+
+
 }

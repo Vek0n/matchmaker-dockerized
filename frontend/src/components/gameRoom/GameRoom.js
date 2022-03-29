@@ -42,8 +42,7 @@ class GameRoom extends React.Component {
 
     getGameRooms = () => {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/room/without/' + userId, {
+        axios.get('http://localhost:8080/room/without', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -71,8 +70,7 @@ class GameRoom extends React.Component {
 
     getAllRoomsWithPlayer() {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/room/open/' + userId, {
+        axios.get('http://localhost:8080/room/open/current', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

@@ -38,7 +38,6 @@ export default function Login({ setToken, setUserId, setUsername}) {
         });
         if (response != null) {
             setToken(response.token)
-            setUserId(response.userId)
             setUsername(username)
         } else {
             alert("Wrong username or password")

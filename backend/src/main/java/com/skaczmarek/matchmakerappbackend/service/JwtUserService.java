@@ -11,6 +11,8 @@ import com.skaczmarek.matchmakerappbackend.domain.user.UserStatus;
 import com.skaczmarek.matchmakerappbackend.repository.UserRepository;
 import com.skaczmarek.matchmakerappbackend.service.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -59,7 +61,8 @@ public class JwtUserService implements UserDetailsService {
         return user.getUserId();
     }
 
-    public UserRole getUserRole(long userId) throws UserNotFoundException {
+    public UserRole getUserRole() throws UserNotFoundException {
+        long userId = getUserIdFromToken();
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(()-> new UserNotFoundException(userId));
@@ -74,6 +77,7 @@ public class JwtUserService implements UserDetailsService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
+
     public boolean deleteUser(long id) throws UserNotFoundException{
         User user = userRepository
                 .findById(id)
@@ -88,4 +92,13 @@ public class JwtUserService implements UserDetailsService {
                 .findByUsername(username);
         return user == null;
     }
+
+    private long getUserIdFromToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository
+                .findByUsername(username)
+                .getUserId();
+    }
+
 }

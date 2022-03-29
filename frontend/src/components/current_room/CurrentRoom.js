@@ -24,8 +24,7 @@ class CurrentRoom extends React.Component {
 
     getData = () => {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/room/newest/' + userId, {
+        axios.get('http://localhost:8080/room/newest', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -39,9 +38,8 @@ class CurrentRoom extends React.Component {
 
     leaveRoom = () => {
         const token = getToken()
-        const userId = getUserId()
         const roomId = this.state.gameRooms[0].id
-        axios.get('http://localhost:8080/room/' + roomId + "/" + userId, {
+        axios.get('http://localhost:8080/room/' + roomId + '/removeCurrentUser', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

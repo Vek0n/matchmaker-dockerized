@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.skaczmarek.matchmakerappbackend.MatchmakerAppBackendApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.942 s - in com.skaczmarek.matchmakerappbackend.MatchmakerAppBackendApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.978 s - in com.skaczmarek.matchmakerappbackend.MatchmakerAppBackendApplicationTests

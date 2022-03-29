@@ -20,8 +20,7 @@ export default class HistoryRooms extends Component {
     }
     getData = () => {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/room/closed/' + userId, {
+        axios.get('http://localhost:8080/room/closed', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

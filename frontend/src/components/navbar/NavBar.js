@@ -17,8 +17,7 @@ class NavBar extends React.Component {
 
     getUserRole() {
         const token = getToken()
-        const userId = getUserId()
-        axios.get('http://localhost:8080/users/role/' + userId, {
+        axios.get('http://localhost:8080/users/role', {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -27,12 +26,12 @@ class NavBar extends React.Component {
                 const userRole = res.data;
                 this.setState({ userRole: userRole });
             })
+            
     }
 
     componentDidMount(){
-        setTimeout(() => {  this.getUserRole() }, 1000);
+        setTimeout(() => { this.getUserRole()  }, 2000);
         const username = getUsername()
-        // this.getUserRole()
         this.setState({username:username})
     }
 

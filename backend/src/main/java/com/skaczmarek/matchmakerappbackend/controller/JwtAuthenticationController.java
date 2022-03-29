@@ -43,12 +43,7 @@ public class JwtAuthenticationController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        long userId = userDetailsService.getUserId(
-                    userDetails.getUsername());
-
-        UserRole userRole = userDetailsService.getUserRole(userId);
-
-        return ResponseEntity.ok(new JwtResponse(token,userId, userRole));
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping(value = "/register")
@@ -76,9 +71,9 @@ public class JwtAuthenticationController {
         return userDetailsService.getUser(userId);
     }
 
-    @GetMapping(value = "/users/role/{userId}")
-    public UserRole getUserRole(@PathVariable long userId) throws UserNotFoundException {
-        return userDetailsService.getUserRole(userId);
+    @GetMapping(value = "/users/role")
+    public UserRole getUserRole() throws UserNotFoundException {
+        return userDetailsService.getUserRole();
     }
 
     @PostMapping(value = "/users/check/{username}")
@@ -87,9 +82,4 @@ public class JwtAuthenticationController {
 //        return new ResponseEntity<>(isUsernameAvailable, HttpStatus.OK);
         return ResponseEntity.ok(isUsernameAvailable);
     }
-
-//    @DeleteMapping(value = "/users/{userId}")
-//    public boolean deleteUser(@PathVariable long userId) throws UserNotFoundException{
-//        return userDetailsService.deleteUser(userId);
-//    }
 }
